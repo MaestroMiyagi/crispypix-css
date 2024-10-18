@@ -1,4 +1,6 @@
+import RootLayout from  './layout';
 import CrispyButton from './components/crispyButton'
+import './styles.css'
 
 export default function Home() {
     return (

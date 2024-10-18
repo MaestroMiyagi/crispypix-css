@@ -7,7 +7,11 @@
   "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "tailwind.config.js",
+    "styles.css",
+    "font.css",
+    "fonts"
   ],
   "scripts": {
     "dev": "next dev",
