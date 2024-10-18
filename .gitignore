@@ -34,3 +34,11 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Others
+.eslintcache
+coverage.lcov
+.pnpm-debug.log
+.idea
+.rollup.cache
+dist/
