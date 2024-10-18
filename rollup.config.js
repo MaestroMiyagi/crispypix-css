@@ -1,44 +1,50 @@
-import resolve from '@rollup/plugin-node-resolve'
-import commonjs from '@rollup/plugin-commonjs'
-import typescript from '@rollup/plugin-typescript'
-import { babel } from '@rollup/plugin-babel'
-import postcss from 'rollup-plugin-postcss'
-import peerDepsExternal from 'rollup-plugin-peer-deps-external'
+import resolve from '@rollup/plugin-node-resolve';
+import postcss from 'rollup-plugin-postcss';
+import copy from 'rollup-plugin-copy';
+import htmlTemplate from 'rollup-plugin-generate-html-template';
+import serve from 'rollup-plugin-serve';
+import livereload from 'rollup-plugin-livereload';
+
+const production = process.env.NODE_ENV === 'production';
 
 export default {
-  input: 'src/index.ts',
-  output: [
-    {
-      file: 'dist/index.js',
-      format: 'cjs',
-      sourcemap: true,
-    },
-    {
-      file: 'dist/index.esm.js',
-      format: 'esm',
-      sourcemap: true,
-    },
-  ],
+  input: 'src/index.js',
+  output: {
+    dir: 'dist',
+    format: 'iife',
+    sourcemap: !production,
+    entryFileNames: 'index.js'
+  },
   plugins: [
-    peerDepsExternal(),
     resolve(),
-    commonjs(),
-    typescript({ tsconfig: './tsconfig.json' }),
-    babel({
-      babelHelpers: 'bundled',
-      extensions: ['.js', '.jsx', '.ts', '.tsx'],
-      presets: ['@babel/preset-react', '@babel/preset-typescript'],
-    }),
     postcss({
-      config: {
-        path: './postcss.config.js',
-      },
+      extract: 'crispypix.css',
+      minimize: production,
+      sourceMap: !production,
       extensions: ['.css'],
-      minimize: true,
-      inject: {
-        insertAt: 'top',
-      },
+      modules: true,
+      namedExports: true,
     }),
-  ],
-  external: ['react', 'react-dom'],
-}
+    copy({
+      targets: [
+        { src: 'src/fonts/*', dest: 'dist/fonts' },
+        { src: 'src/styles/*.css', dest: 'dist/styles' },
+        { src: 'src/components/*', dest: 'dist/components' }
+      ]
+    }),
+    htmlTemplate({
+      template: 'src/index.html',
+      target: 'dist/index.html',
+      attrs: ['type="text/css"', 'rel="stylesheet"'],
+      replaceVars: {
+        '__CSS__': './crispypix.css'
+      }
+    }),
+    !production && serve({
+      contentBase: 'dist',
+      open: true,
+      port: 3000
+    }),
+    !production && livereload('dist')
+  ]
+};
