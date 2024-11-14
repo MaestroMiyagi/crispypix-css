@@ -1,0 +1,38 @@
+---
+import '../../packages/index.css'
+
+interface Props {
+  title: string
+}
+
+const { title } = Astro.props
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="CrispyPix CSS Documentation" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+      rel="stylesheet"
+    />
+    <title>{title}</title>
+  </head>
+  <body>
+    <main class="container mx-auto px-4 py-8">
+      <slot />
+    </main>
+  </body>
+</html>
+
+<style>
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+</style>

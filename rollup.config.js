@@ -1,50 +1,31 @@
-import resolve from '@rollup/plugin-node-resolve';
-import postcss from 'rollup-plugin-postcss';
-import copy from 'rollup-plugin-copy';
-import htmlTemplate from 'rollup-plugin-generate-html-template';
-import serve from 'rollup-plugin-serve';
-import livereload from 'rollup-plugin-livereload';
+import postcss from 'rollup-plugin-postcss'
+import copy from 'rollup-plugin-copy'
+import { nodeResolve } from '@rollup/plugin-node-resolve'
+import path from 'path'
 
-const production = process.env.NODE_ENV === 'production';
+const production = process.env.NODE_ENV === 'production'
 
 export default {
-  input: 'src/index.js',
+  input: 'packages/index.css',
   output: {
-    dir: 'dist',
-    format: 'iife',
-    sourcemap: !production,
-    entryFileNames: 'index.js'
+    file: 'dist/crispypix.css',
+    format: 'es',
   },
   plugins: [
-    resolve(),
+    nodeResolve(),
     postcss({
-      extract: 'crispypix.css',
+      extract: true,
       minimize: production,
       sourceMap: !production,
-      extensions: ['.css'],
-      modules: true,
-      namedExports: true,
+      modules: false,
     }),
     copy({
       targets: [
-        { src: 'src/fonts/*', dest: 'dist/fonts' },
-        { src: 'src/styles/*.css', dest: 'dist/styles' },
-        { src: 'src/components/*', dest: 'dist/components' }
-      ]
+        { src: 'packages/fonts/*', dest: 'dist' },
+        { src: 'packages/styles/*.css', dest: 'dist' },
+        { src: 'packages/components/*.css', dest: 'dist' },
+      ],
+      flatten: false,
     }),
-    htmlTemplate({
-      template: 'src/index.html',
-      target: 'dist/index.html',
-      attrs: ['type="text/css"', 'rel="stylesheet"'],
-      replaceVars: {
-        '__CSS__': './crispypix.css'
-      }
-    }),
-    !production && serve({
-      contentBase: 'dist',
-      open: true,
-      port: 3000
-    }),
-    !production && livereload('dist')
-  ]
-};
+  ],
+}

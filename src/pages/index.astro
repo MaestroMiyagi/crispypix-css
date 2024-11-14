@@ -1,0 +1,35 @@
+---
+import Layout from '../layouts/Layout.astro'
+import CodePreview from '../components/CodePreview.astro'
+
+// Ejemplos de código
+const buttonCode = `<button class="crispypix-btn">Default Button</button>
+<button class="crispypix-btn crispypix-btn-primary">Primary Button</button>
+<button class="crispypix-btn crispypix-btn-secondary">Secondary Button</button>`
+---
+
+<Layout title="CrispyPix CSS Documentation">
+  <h1 class="text-4xl mb-8">CrispyPix CSS Documentation</h1>
+
+  <section class="mb-12">
+    <h2 class="text-2xl mb-4">Buttons</h2>
+
+    <CodePreview
+      title="Basic Buttons"
+      description="CrispyPix provides three button styles: default, primary, and secondary."
+      code={buttonCode}
+    >
+      <div class="flex gap-4 flex-wrap">
+        <button class="crispypix-btn">Default Button</button>
+        <button class="crispypix-btn crispypix-btn-primary"
+          >Primary Button</button
+        >
+        <button class="crispypix-btn crispypix-btn-secondary"
+          >Secondary Button</button
+        >
+      </div>
+    </CodePreview>
+  </section>
+
+  <!-- Puedes agregar más secciones con diferentes componentes -->
+</Layout>

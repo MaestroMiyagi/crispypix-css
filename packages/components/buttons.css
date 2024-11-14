@@ -1,0 +1,39 @@
+.crispypix-btn {
+    font-family: 'Press Start 2P', cursive;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    background-color: var(--color-primary);
+    color: var(--color-text);
+    text-transform: uppercase;
+    box-shadow: 0 4px 0 #9c5749;
+    transition: all 0.1s ease;
+}
+
+.crispypix-btn:hover {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 #9c5749;
+}
+
+.crispypix-btn:active {
+    transform: translateY(4px);
+    box-shadow: none;
+}
+
+.crispypix-btn-primary {
+    background-color: #fe6854;
+    box-shadow: 0 4px 0 #c1304e;
+}
+
+.crispypix-btn-primary:hover {
+    box-shadow: 0 2px 0 #c1304e;
+}
+
+.crispypix-btn-secondary {
+    background-color: var(--color-secondary);
+    box-shadow: 0 4px 0 #2f38a8;
+}
+
+.crispypix-btn-secondary:hover {
+    box-shadow: 0 2px 0 #2f38a8;
+}

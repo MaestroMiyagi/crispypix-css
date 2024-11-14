@@ -1,0 +1,198 @@
+---
+interface Props {
+  title: string
+  description?: string
+  code: string
+}
+
+const { title, description, code } = Astro.props
+---
+
+<div
+  class="code-preview border-2 border-[--color-dark] rounded-lg overflow-hidden mb-8"
+>
+  <!-- Header -->
+  <div class="bg-[--color-dark] text-[--color-light] p-4">
+    <div class="flex justify-between items-center mb-2">
+      <h3 class="text-xl">{title}</h3>
+      <!-- Tabs de navegación con estilo pixel art -->
+      <div class="view-toggle flex gap-2">
+        <button
+          class="preview-tab px-4 py-2 bg-[--color-light] text-[--color-dark] text-sm active"
+          data-view="preview"
+        >
+          Preview
+        </button>
+        <button
+          class="code-tab px-4 py-2 bg-[--color-dark] text-[--color-light] text-sm border border-[--color-light]"
+          data-view="code"
+        >
+          Code
+        </button>
+      </div>
+    </div>
+    {description && <p class="text-sm opacity-80">{description}</p>}
+  </div>
+
+  <!-- Contenedor de vistas -->
+  <div class="views-container">
+    <!-- Vista previa -->
+    <div
+      class="preview-view p-8 bg-[--color-light] min-h-[200px] flex items-center justify-center"
+    >
+      <slot />
+    </div>
+
+    <!-- Vista código -->
+    <div class="code-view hidden relative">
+      <pre
+        class="p-4 bg-[--color-dark-brown] text-[--color-light] overflow-x-auto"><code>{code}</code></pre>
+      <button
+        class="copy-button absolute top-2 right-2 p-2 bg-[--color-light] text-[--color-dark] rounded"
+        aria-label="Copy code"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+          ></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .view-toggle button {
+    position: relative;
+    transition: all 0.3s ease;
+    border: 2px solid var(--color-dark);
+  }
+
+  .view-toggle button::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+  }
+
+  .view-toggle button.active {
+    background-color: var(--color-light);
+    color: var(--color-dark);
+    border-bottom: none;
+  }
+
+  .view-toggle button:not(.active) {
+    background-color: var(--color-dark);
+    color: var(--color-light);
+    border: 2px solid var(--color-light);
+  }
+
+  .view-toggle button:not(.active):hover {
+    background-color: var(--color-dark-brown);
+  }
+
+  .copy-button {
+    opacity: 0.8;
+    transition: all 0.2s ease;
+  }
+
+  .copy-button:hover {
+    opacity: 1;
+    background-color: var(--color-beige);
+  }
+
+  .copy-button.copied {
+    background-color: var(--color-dark-green);
+    color: var(--color-light);
+  }
+
+  pre {
+    font-family: 'Courier New', Courier, monospace;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  code {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+
+  .hidden {
+    display: none;
+  }
+</style>
+
+<script>
+  // Manejar el cambio de vistas
+  document.querySelectorAll('.view-toggle button').forEach((button) => {
+    button.addEventListener('click', () => {
+      const view = button.getAttribute('data-view')
+      const container = button.closest('.code-preview')
+      if (!container) return
+
+      // Actualizar tabs
+      container.querySelectorAll('.view-toggle button').forEach((btn) => {
+        btn.classList.remove('active')
+      })
+      button.classList.add('active')
+
+      // Mostrar vista correspondiente
+      container
+        .querySelectorAll('.preview-view, .code-view')
+        .forEach((view) => {
+          view.classList.add('hidden')
+        })
+      container.querySelector(`.${view}-view`)?.classList.remove('hidden')
+    })
+  })
+
+  // Funcionalidad de copiar código
+  document.querySelectorAll('.copy-button').forEach((button) => {
+    button.addEventListener('click', async () => {
+      const pre = button.closest('.code-view')?.querySelector('pre')
+      if (pre) {
+        try {
+          await navigator.clipboard.writeText(pre.textContent || '')
+
+          // Cambiar el ícono a un check temporalmente
+          const originalSVG = button.innerHTML
+          button.innerHTML = `
+            <svg 
+              xmlns="http://www.w3.org/2000/svg" 
+              width="20" 
+              height="20" 
+              viewBox="0 0 24 24" 
+              fill="none" 
+              stroke="currentColor" 
+              stroke-width="2" 
+              stroke-linecap="round" 
+              stroke-linejoin="round"
+            >
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          `
+          button.classList.add('copied')
+
+          setTimeout(() => {
+            button.innerHTML = originalSVG
+            button.classList.remove('copied')
+          }, 2000)
+        } catch (err) {
+          console.error('Failed to copy text:', err)
+        }
+      }
+    })
+  })
+</script>

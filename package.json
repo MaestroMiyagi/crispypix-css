@@ -1,5 +1,6 @@
 {
   "name": "crispypix-css",
+  "type": "module",
   "version": "0.1.0",
   "description": "A pixel-perfect, 8-bit style CSS framework built with vanilla CSS",
   "main": "dist/crispypix.css",
@@ -9,8 +10,13 @@
   ],
   "scripts": {
     "clean": "rimraf dist",
-    "build": "cross-env NODE_ENV=production npm run clean && rollup -c",
-    "dev": "rollup -c -w",
+    "build": "npm run build:css && npm run build:site",
+    "build:css": "cross-env NODE_ENV=production npm run clean && rollup -c",
+    "build:site": "astro check && astro build",
+    "dev": "astro dev",
+    "dev:css": "rollup -c -w",
+    "preview": "astro preview",
+    "astro": "astro",
     "serve": "rollup -c -w"
   },
   "keywords": [
@@ -29,6 +35,15 @@
     "url": "https://github.com/MaestroMiyagi/crispypix-css/issues"
   },
   "homepage": "https://github.com/MaestroMiyagi/crispypix-css#readme",
+  "dependencies": {
+    "@astrojs/check": "^0.9.4",
+    "@astrojs/react": "^3.6.2",
+    "astro": "^4.16.12",
+    "lucide-react": "^0.456.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "typescript": "^5.6.3"
+  },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^13.3.0",
     "autoprefixer": "^10.4.14",
